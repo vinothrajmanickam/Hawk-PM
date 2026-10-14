@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>EquitasPM / HawkPM - Standard Operating Procedure (SOP)</title>
+<style>
+  :root {
+    --brand: #1b4d8c;
+    --green: #16a34a;
+    --amber: #d97706;
+    --red: #dc2626;
+    --slate-700: #334155;
+    --slate-600: #475569;
+    --slate-500: #64748b;
+    --slate-300: #cbd5e1;
+    --slate-200: #e2e8f0;
+    --slate-100: #f1f5f9;
+    --slate-50: #f8fafc;
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: #0f172a; margin: 0; padding: 36px 46px; line-height: 1.5; font-size: 13.5px;
+    -webkit-print-color-adjust: exact; print-color-adjust: exact;
+  }
+  header {
+    display: flex; align-items: flex-start; justify-content: space-between;
+    border-bottom: 3px solid var(--brand); padding-bottom: 16px; margin-bottom: 22px;
+  }
+  .brand-mark { font-size: 26px; font-weight: 800; letter-spacing: -0.5px; }
+  .brand-mark .pm { background: var(--brand); color: #fff; padding: 2px 6px; border-radius: 4px; font-size: 12px; margin-left: 6px; vertical-align: middle; text-transform: uppercase; letter-spacing: 1px; }
+  .subtitle { color: var(--slate-500); font-size: 12px; margin-top: 2px; }
+  .doc-meta { text-align: right; font-size: 11px; color: var(--slate-500); line-height: 1.7; }
+  h1 { font-size: 21px; margin: 0 0 4px; }
+  .lead { color: var(--slate-600); font-size: 13px; margin: 0 0 4px; }
+  h2 { font-size: 15px; color: #fff; background: var(--brand); margin: 30px 0 12px; padding: 7px 12px; border-radius: 5px; letter-spacing: 0.3px; }
+  h3 { font-size: 13.5px; color: var(--brand); margin: 20px 0 6px; }
+  ol, ul { margin: 6px 0 12px; padding-left: 22px; }
+  li { margin-bottom: 6px; }
+  ol.steps > li { margin-bottom: 10px; }
+  ol.steps > li::marker { font-weight: 700; color: var(--brand); }
+  code { background: var(--slate-100); padding: 1px 5px; border-radius: 3px; font-size: 11.5px; font-family: "SFMono-Regular", Consolas, monospace; color: #0f172a; }
+  strong { color: #0f172a; }
+  table { width: 100%; border-collapse: collapse; font-size: 12px; margin: 8px 0 14px; }
+  th, td { border: 1px solid var(--slate-200); padding: 7px 9px; text-align: left; vertical-align: top; }
+  thead th { background: var(--brand); color: #fff; font-size: 11px; text-transform: uppercase; letter-spacing: 0.4px; }
+  tbody tr:nth-child(even) { background: var(--slate-50); }
+  .yes { color: var(--green); font-weight: 700; }
+  .no { color: var(--red); font-weight: 700; }
+  .cond { color: var(--amber); font-weight: 700; }
+  .callout { border-radius: 6px; padding: 11px 14px; font-size: 12px; margin: 12px 0; border: 1px solid var(--slate-200); background: var(--slate-50); color: var(--slate-700); }
+  .callout.note { border-left: 4px solid var(--brand); }
+  .callout.warn { border-left: 4px solid var(--red); background: #fef2f2; color: #7f1d1d; }
+  .callout.tip  { border-left: 4px solid var(--green); background: #f0fdf4; color: #14532d; }
+  .toc { columns: 2; font-size: 12.5px; margin: 8px 0 8px; }
+  .toc a { color: var(--brand); text-decoration: none; }
+  .tag { display: inline-block; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; padding: 1px 7px; border-radius: 10px; vertical-align: middle; }
+  .tag.all { background: #e0edff; color: #1e40af; }
+  .tag.owner { background: #fef3c7; color: #92400e; }
+  .tag.admin { background: #fee2e2; color: #991b1b; }
+  .tag.super { background: #ede9fe; color: #5b21b6; }
+
+  /* Screenshot slot styling */
+  .shot { margin: 10px 0 18px; border: 1px solid var(--slate-200); border-radius: 8px; overflow: hidden; background: var(--slate-50); }
+  .shot .cap { font-size: 11px; color: var(--slate-600); background: var(--slate-100); padding: 6px 10px; border-bottom: 1px solid var(--slate-200); }
+  .shot .cap b { color: var(--brand); }
+  .shot img { display: block; width: 100%; max-height: 520px; object-fit: contain; background: #fff; }
+
+  footer { margin-top: 34px; border-top: 1px solid var(--slate-200); padding-top: 12px; font-size: 10px; color: var(--slate-500); display: flex; justify-content: space-between; }
+  .print-btn { position: fixed; top: 16px; right: 16px; background: var(--brand); color: #fff; border: none; padding: 10px 18px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 8px rgba(0,0,0,0.15); }
+  @media print {
+    body { padding: 0; }
+    .print-btn { display: none; }
+    h2, h3 { page-break-after: avoid; }
+    tr, li { page-break-inside: avoid; }
+    .callout, .shot { page-break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+  <button class="print-btn" onclick="window.print()">Save as PDF</button>
+
+  <header>
+    <div>
+      <div class="brand-mark">Equitas<span class="pm">PM</span></div>
+      <div class="subtitle">HawkPM &middot; Project Management &middot; Equitas Small Finance Bank</div>
+    </div>
+    <div class="doc-meta">
+      <div><strong>Standard Operating Procedure</strong></div>
+      <div>Document: SOP-PM-02</div>
+      <div id="gen-date"></div>
+      <div>Version 2.0</div>
+    </div>
+  </header>
+
+  <h1>SOP: Creating, Editing, Modifying, Deleting &amp; Archiving Projects</h1>
+  <p class="lead">Audience: Super Admins, Admins, Project Managers (PMs), Application Owners, and all authorized users of the HawkPM / EquitasPM tool.</p>
+  <p class="lead">Purpose: Step-by-step instructions for the full project lifecycle, including the maker-checker deletion workflow and the Archived Projects bucket, with a screenshot after each step.</p>
+
+  <div class="callout note">
+    <strong>How to add screenshots:</strong> Each step has an image slot that loads a file from
+    <code>docs/screenshots/</code>. Run the app (<code>npm run dev</code> &rarr; <code>http://localhost:3000</code>),
+    capture each screen, and save the PNG using the exact filename shown in the caption. The image then appears here automatically.
+    A full filename list is in <code>docs/screenshots/README.md</code>.
+  </div>
+
+  <h2 id="toc">Contents</h2>
+  <div class="toc">
+    1. <a href="#access">Roles &amp; Access Rights</a><br />
+    2. <a href="#signin">Signing In</a><br />
+    3. <a href="#create">Creating a New Project</a><br />
+    4. <a href="#edit">Editing / Modifying a Project</a><br />
+    5. <a href="#timeline">Timeline, Risks &amp; Delays</a><br />
+    6. <a href="#delete">Requesting Deletion (Maker)</a><br />
+    7. <a href="#approve">Approving / Rejecting Deletion (Checker)</a><br />
+    8. <a href="#archive">Archived Projects (Restore / Permanent Delete)</a><br />
+    9. <a href="#rag">Setting RAG Status</a><br />
+    10. <a href="#export">Exporting Reports</a><br />
+    11. <a href="#notes">Data &amp; Governance Notes</a>
+  </div>
+
+  <!-- 1 -->
+  <h2 id="access">1. Roles &amp; Access Rights</h2>
+  <p>Every action is governed by the user's role and relationship to the project. This is the authoritative permission set.</p>
+  <table>
+    <thead>
+      <tr><th style="width:24%">Role</th><th>Create</th><th>View</th><th>Edit</th><th>Request Delete</th><th>Approve Delete</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>Super Admin</strong></td><td class="yes">Yes</td><td class="yes">All</td><td class="yes">All</td><td class="yes">Yes</td><td class="yes">Yes</td></tr>
+      <tr><td><strong>Admin</strong> (Vinoth / <code>admin</code>)</td><td class="yes">Yes</td><td class="yes">All</td><td class="yes">All</td><td class="yes">Yes</td><td class="no">No</td></tr>
+      <tr><td><strong>Project Manager</strong></td><td class="yes">Yes</td><td class="yes">All</td><td class="cond">Own only</td><td class="no">No</td><td class="no">No</td></tr>
+      <tr><td><strong>Application Owner</strong></td><td class="yes">Yes</td><td class="yes">All</td><td class="cond">Assigned only</td><td class="no">No</td><td class="no">No</td></tr>
+      <tr><td><strong>User / Viewer</strong></td><td class="yes">Yes</td><td class="yes">All</td><td class="no">View only</td><td class="no">No</td><td class="no">No</td></tr>
+    </tbody>
+  </table>
+  <div class="callout note">
+    <strong>Maker-checker:</strong> Deletion is a two-person control. An <strong>Admin</strong> (maker) requests deletion; a <strong>Super Admin</strong> (checker) approves it. The same person cannot both request and approve the same deletion.
+  </div>
+
+  <!-- 2 -->
+  <h2 id="signin">2. Signing In</h2>
+  <ol class="steps">
+    <li>Open the tool: production <code>https://hawk.equitas.bank.in</code>, UAT <code>https://hawkuat.equitasuat.bank.in</code>, or local <code>http://localhost:3000</code>.</li>
+    <li>Sign in with <strong>Sign in with Microsoft</strong> (Entra ID SSO), or use a User ID + password for test profiles.</li>
+    <li>You land on the <strong>PM Teams Dashboard</strong> with your name and role shown at the top-right.</li>
+  </ol>
+  <div class="shot">
+    <div class="cap"><b>Screenshot 01</b> &mdash; <code>screenshots/01-login.png</code> &middot; Login screen showing the User ID/password form and the "Sign in with Microsoft" button.</div>
+    <img src="screenshots/01-login.png" alt="Login screen" onerror="this.style.display='none'" />
+  </div>
+
+  <!-- 3 -->
+  <h2 id="create">3. Creating a New Project <span class="tag all">All users</span></h2>
+  <p>Any signed-in user can create a project. The system auto-assigns the next ID (<code>EP00001</code>, <code>EP00002</code>, &hellip;).</p>
+  <ol class="steps">
+    <li>On the Dashboard (Active tab), click <strong>Create Project</strong> (top-right).</li>
+    <li>In the dialog, complete <strong>Project Overview</strong>: Name, Methodology (Waterfall/Agile/Hybrid), Severity (Low/Medium/High), Description, and optional Jira link.</li>
+    <li>Complete <strong>Key Stakeholders &amp; Permissions</strong> (PM, Application Owner, SPOC, Business): Name, Employee ID, Department, and Edit/View permission. Use <strong>Add Stakeholder</strong> for more.</li>
+    <li>Click <strong>Initialize Project</strong>. Missing required fields are listed in an error banner.</li>
+    <li>The project appears on the Active dashboard with default RAG = <strong>Red</strong>.</li>
+  </ol>
+  <div class="shot">
+    <div class="cap"><b>Screenshot 02</b> &mdash; <code>screenshots/02-create-overview.png</code> &middot; Create Project dialog, Project Overview section with the reserved Project ID visible.</div>
+    <img src="screenshots/02-create-overview.png" alt="Create project - overview" onerror="this.style.display='none'" />
+  </div>
+  <div class="shot">
+    <div class="cap"><b>Screenshot 03</b> &mdash; <code>screenshots/03-create-stakeholders.png</code> &middot; Create Project dialog, Key Stakeholders &amp; Permissions rows.</div>
+    <img src="screenshots/03-create-stakeholders.png" alt="Create project - stakeholders" onerror="this.style.display='none'" />
+  </div>
+
+  <!-- 4 -->
+  <h2 id="edit">4. Editing / Modifying a Project <span class="tag super">Super Admin</span> <span class="tag admin">Admin</span> <span class="tag owner">Own PM / Owner</span></h2>
+  <ol class="steps">
+    <li>From the Active tab, click a project row to open <strong>Project Details</strong>.</li>
+    <li>If you have edit rights, fields are editable; otherwise the screen is read-only.</li>
+    <li>Update overview, requirements (URD/BRD/FSD), development/custom phases, and stakeholders as needed.</li>
+    <li>Where a <strong>Save Changes</strong> button appears, click it to commit that section.</li>
+  </ol>
+  <div class="shot">
+    <div class="cap"><b>Screenshot 04</b> &mdash; <code>screenshots/04-project-details.png</code> &middot; Project Details screen in edit mode (overview + requirements visible).</div>
+    <img src="screenshots/04-project-details.png" alt="Project details edit" onerror="this.style.display='none'" />
+  </div>
+
+  <!-- 5 -->
+  <h2 id="timeline">5. Timeline, Risks &amp; Delays <span class="tag super">Super Admin</span> <span class="tag admin">Admin</span> <span class="tag owner">Own PM / Owner</span></h2>
+  <ol class="steps">
+    <li>Open the <strong>Timeline</strong> section; enter planned/actual dates for each milestone.</li>
+    <li>Click <strong>Save Changes</strong>. The first save creates a baseline; later saves record a new timeline version (timestamp, author, change summary).</li>
+    <li>Add <strong>Risks</strong> (description, owner, ETA) and <strong>Delays</strong> (reason, owner, impacted week); remove with the trash icon.</li>
+  </ol>
+  <div class="shot">
+    <div class="cap"><b>Screenshot 05</b> &mdash; <code>screenshots/05-timeline.png</code> &middot; Timeline grid with version history, plus Risks &amp; Delays.</div>
+    <img src="screenshots/05-timeline.png" alt="Timeline risks delays" onerror="this.style.display='none'" />
+  </div>
+
+  <!-- 6 -->
+  <h2 id="delete">6. Requesting Deletion &mdash; Maker Step <span class="tag admin">Admin</span></h2>
+  <div class="callout warn">
+    <strong>Maker step:</strong> An Admin requests deletion. The project is NOT removed &mdash; it moves to <strong>Pending Deletion</strong> and awaits Super Admin approval.
+  </div>
+  <ol class="steps">
+    <li>Open the target project's <strong>Project Details</strong> screen as an Admin.</li>
+    <li>Click <strong>Request Deletion</strong>. Confirm the first prompt (maker-step warning).</li>
+    <li>Enter a <strong>mandatory reason</strong> when prompted (recorded in the audit trail).</li>
+    <li>Confirm the second prompt. The project moves to <strong>Pending Approvals</strong>; the button now shows "Pending Approval" and a banner appears.</li>
+  </ol>
+  <div class="shot">
+    <div class="cap"><b>Screenshot 06</b> &mdash; <code>screenshots/06-request-deletion.png</code> &middot; The "Request Deletion" button + the reason prompt / confirmation dialog.</div>
+    <img src="screenshots/06-request-deletion.png" alt="Request deletion" onerror="this.style.display='none'" />
+  </div>
+  <div class="shot">
+    <div class="cap"><b>Screenshot 07</b> &mdash; <code>screenshots/07-pending-banner.png</code> &middot; Project Details showing the amber "Pending Deletion" banner with requester + reason.</div>
+    <img src="screenshots/07-pending-banner.png" alt="Pending deletion banner" onerror="this.style.display='none'" />
+  </div>
+
+  <!-- 7 -->
+  <h2 id="approve">7. Approving / Rejecting Deletion &mdash; Checker Step <span class="tag super">Super Admin only</span></h2>
+  <ol class="steps">
+    <li>Sign in as a <strong>Super Admin</strong> (different person from the requester).</li>
+    <li>On the Dashboard, open the <strong>Pending Approvals</strong> tab (badge shows the count).</li>
+    <li>Review the request (project, requester, reason). Click <strong>Approve</strong> to archive the project, or <strong>Reject</strong> (reason required) to return it to Active.</li>
+  </ol>
+  <div class="shot">
+    <div class="cap"><b>Screenshot 08</b> &mdash; <code>screenshots/08-pending-approvals.png</code> &middot; Pending Approvals tab with a request row and the Approve / Reject buttons.</div>
+    <img src="screenshots/08-pending-approvals.png" alt="Pending approvals tab" onerror="this.style.display='none'" />
+  </div>
+
+  <!-- 8 -->
+  <h2 id="archive">8. Archived Projects <span class="tag super">Restore: Admin / Super Admin</span> <span class="tag admin">Delete Forever: Super Admin</span></h2>
+  <ol class="steps">
+    <li>Open the <strong>Archived Projects</strong> tab. Approved deletions appear here with the full audit trail (requested by, approved by, reason).</li>
+    <li><strong>View</strong> any archived project (read-only) or export it.</li>
+    <li><strong>Restore</strong> (Admin / Super Admin) returns the project to Active.</li>
+    <li><strong>Delete Forever</strong> (Super Admin only) permanently purges it, with double confirmation. This cannot be undone.</li>
+  </ol>
+  <div class="shot">
+    <div class="cap"><b>Screenshot 09</b> &mdash; <code>screenshots/09-archived-tab.png</code> &middot; Archived Projects tab showing an archived row with Restore and Delete Forever buttons.</div>
+    <img src="screenshots/09-archived-tab.png" alt="Archived tab" onerror="this.style.display='none'" />
+  </div>
+
+  <!-- 9 -->
+  <h2 id="rag">9. Setting RAG Status <span class="tag super">Super Admin</span> <span class="tag admin">Admin</span> <span class="tag owner">Own PM / Owner</span></h2>
+  <ol class="steps">
+    <li>On the Active tab, users with edit rights see a RAG dropdown on the project row.</li>
+    <li>Select Red / Amber / Green; it saves immediately and the dashboard re-sorts (Red first) and updates the pie chart.</li>
+  </ol>
+  <div class="shot">
+    <div class="cap"><b>Screenshot 10</b> &mdash; <code>screenshots/10-rag-status.png</code> &middot; Dashboard RAG dropdown + the RAG summary cards / pie chart.</div>
+    <img src="screenshots/10-rag-status.png" alt="RAG status" onerror="this.style.display='none'" />
+  </div>
+
+  <!-- 10 -->
+  <h2 id="export">10. Exporting Reports <span class="tag all">All users</span></h2>
+  <ol class="steps">
+    <li>Click <strong>Export Report</strong> and choose Excel, Word, Print/PDF, or CSV. A single project can also be exported from its Details screen.</li>
+  </ol>
+  <div class="shot">
+    <div class="cap"><b>Screenshot 11</b> &mdash; <code>screenshots/11-export-menu.png</code> &middot; The Export Report menu with format options.</div>
+    <img src="screenshots/11-export-menu.png" alt="Export menu" onerror="this.style.display='none'" />
+  </div>
+
+  <!-- 11 -->
+  <h2 id="notes">11. Data &amp; Governance Notes</h2>
+  <ul>
+    <li><strong>Unique IDs:</strong> assigned sequentially (<code>EP00001+</code>) and never reused.</li>
+    <li><strong>Create open; edit/delete controlled:</strong> anyone creates; Super Admin/Admin or the project's own PM/Owner edit; deletion follows maker-checker.</li>
+    <li><strong>Maker-checker:</strong> Admin requests &rarr; Super Admin approves (archive) or rejects (active). Approver must differ from requester.</li>
+    <li><strong>Audit trail:</strong> request/approve/reject/restore and timeline changes are stamped with who and when.</li>
+    <li><strong>SSO:</strong> Microsoft sign-in users default to Viewer/Stakeholder; a user named Vinoth is treated as Admin; name/ID "superadmin" is Super Admin (interim rule until Azure AD roles are mapped).</li>
+    <li><strong>Backups:</strong> this build stores data in the browser; export reports for record-keeping (shared persistence requires the planned backend/DB).</li>
+  </ul>
+
+  <footer>
+    <span>HawkPM / EquitasPM &mdash; Confidential. For internal use only.</span>
+    <span>SOP-PM-02 &middot; Prepared from the application behavior</span>
+  </footer>
+
+  <script>
+    document.getElementById('gen-date').textContent =
+      'Issued: ' + new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+  </script>
+</body>
+</html>

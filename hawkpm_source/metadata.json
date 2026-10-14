@@ -1,0 +1,6 @@
+{
+  "name": "EquitasPM",
+  "description": "Equitas Small Finance Bank Portfolio Cockpit - A high-performance project management dashboard and lifecycle tracker with automated RAG sorting, phase-unlocking logic, and custom phase creation.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

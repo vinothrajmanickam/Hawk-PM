@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>HawkPM - Solution Architecture (InfoSec Review)</title>
+<style>
+  :root {
+    --brand: #1b4d8c;
+    --aws: #ff9900;
+    --navy: #232f3e;
+    --green: #16a34a;
+    --red: #dc2626;
+    --slate-700: #334155;
+    --slate-600: #475569;
+    --slate-500: #64748b;
+    --slate-300: #cbd5e1;
+    --slate-200: #e2e8f0;
+    --slate-100: #f1f5f9;
+    --slate-50: #f8fafc;
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: #0f172a; margin: 0; padding: 34px 44px; line-height: 1.5; font-size: 13px;
+    -webkit-print-color-adjust: exact; print-color-adjust: exact;
+  }
+  header {
+    display: flex; align-items: flex-start; justify-content: space-between;
+    border-bottom: 3px solid var(--brand); padding-bottom: 14px; margin-bottom: 20px;
+  }
+  .brand-mark { font-size: 23px; font-weight: 800; letter-spacing: -0.5px; color: #0f172a; }
+  .brand-mark .pm { background: var(--brand); color: #fff; padding: 2px 6px; border-radius: 4px; font-size: 11px; margin-left: 6px; vertical-align: middle; text-transform: uppercase; letter-spacing: 1px; }
+  .subtitle { color: var(--slate-500); font-size: 12px; margin-top: 2px; }
+  .doc-meta { text-align: right; font-size: 11px; color: var(--slate-500); line-height: 1.7; }
+  h1 { font-size: 19px; margin: 0 0 4px; }
+  .lead { color: var(--slate-600); font-size: 12.5px; margin: 0 0 4px; }
+  h2 { font-size: 13.5px; color: #fff; background: var(--brand); margin: 24px 0 10px; padding: 7px 12px; border-radius: 5px; }
+  h3 { font-size: 12.5px; color: var(--brand); margin: 16px 0 6px; }
+  table { width: 100%; border-collapse: collapse; font-size: 11.5px; margin: 6px 0 12px; }
+  th, td { border: 1px solid var(--slate-200); padding: 6px 9px; text-align: left; vertical-align: top; }
+  thead th { background: var(--brand); color: #fff; font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.4px; }
+  tbody tr:nth-child(even) { background: var(--slate-50); }
+  code { background: var(--slate-100); padding: 1px 5px; border-radius: 3px; font-size: 11px; font-family: "SFMono-Regular", Consolas, monospace; }
+  ul, ol { margin: 6px 0 10px; padding-left: 20px; }
+  li { margin-bottom: 5px; }
+  .legend { display: flex; flex-wrap: wrap; gap: 16px; font-size: 11px; margin: 8px 0; color: var(--slate-700); }
+  .legend span { display: inline-flex; align-items: center; gap: 6px; }
+  .sw { width: 12px; height: 12px; border-radius: 3px; display: inline-block; }
+  .diagram-wrap { border: 1px solid var(--slate-200); border-radius: 8px; padding: 10px; background: #fff; overflow-x: auto; }
+  .callout { border-radius: 6px; padding: 10px 13px; font-size: 11.5px; margin: 10px 0; border-left: 4px solid var(--brand); background: var(--slate-50); color: var(--slate-700); }
+  .callout.sec { border-left-color: var(--green); background: #f0fdf4; color: #14532d; }
+  footer { margin-top: 28px; border-top: 1px solid var(--slate-200); padding-top: 10px; font-size: 10px; color: var(--slate-500); display: flex; justify-content: space-between; }
+  .print-btn { position: fixed; top: 16px; right: 16px; background: var(--brand); color: #fff; border: none; padding: 10px 18px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 8px rgba(0,0,0,0.15); }
+  .approval-box { display: flex; gap: 16px; margin-top: 10px; }
+  .approval-box div { flex: 1; border: 1px solid var(--slate-300); border-radius: 6px; padding: 10px 12px; font-size: 11px; }
+  .approval-box .line { margin-top: 26px; border-top: 1px solid var(--slate-400); padding-top: 4px; color: var(--slate-500); }
+  @media print {
+    body { padding: 0; }
+    .print-btn { display: none; }
+    h2, h3 { page-break-after: avoid; }
+    tr, li { page-break-inside: avoid; }
+    .callout, .diagram-wrap, table { page-break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+  <button class="print-btn" onclick="window.print()">Save as PDF</button>
+
+  <header>
+    <div>
+      <div class="brand-mark">Hawk<span class="pm">PM</span></div>
+      <div class="subtitle">Solution Architecture &amp; Security Controls &middot; Equitas Small Finance Bank</div>
+    </div>
+    <div class="doc-meta">
+      <div><strong>Architecture for InfoSec Review</strong></div>
+      <div id="gen-date"></div>
+      <div>Version 1.0 &middot; Classification: Internal</div>
+    </div>
+  </header>
+
+  <h1>HawkPM &mdash; Organizational Architecture (Information Security Review)</h1>
+  <p class="lead">Purpose: Present the end-to-end solution architecture and security controls for HawkPM (Project Management portal) to obtain Information Security approval prior to AWS deployment.</p>
+  <p class="lead">Scope: Two fully isolated environments (UAT and Production). Hosting on the organization's AWS account; identity via Microsoft Entra ID (SSO).</p>
+
+  <h2>1. Architecture Diagram</h2>
+  <div class="legend">
+    <span><span class="sw" style="background:#1b4d8c"></span>Corporate / Identity</span>
+    <span><span class="sw" style="background:#ff9900"></span>AWS Edge / Public</span>
+    <span><span class="sw" style="background:#16a34a"></span>AWS Private (no internet)</span>
+    <span><span class="sw" style="background:#64748b"></span>Data at rest (encrypted)</span>
+  </div>
+  <div class="diagram-wrap">
+    <svg viewBox="0 0 980 560" width="980" height="560" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, Arial, sans-serif" font-size="12">
+      <!-- Styles -->
+      <defs>
+        <marker id="arrow" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto" markerUnits="strokeWidth">
+          <path d="M0,0 L7,3 L0,6 Z" fill="#475569" />
+        </marker>
+      </defs>
+
+      <!-- USER -->
+      <rect x="30" y="40" width="150" height="70" rx="8" fill="#eef2ff" stroke="#1b4d8c" stroke-width="1.5"/>
+      <text x="105" y="68" text-anchor="middle" font-weight="700" fill="#1b4d8c">Bank User</text>
+      <text x="105" y="86" text-anchor="middle" fill="#475569">Browser (HTTPS)</text>
+      <text x="105" y="101" text-anchor="middle" fill="#64748b" font-size="10">Corporate network / Zscaler</text>
+
+      <!-- ENTRA ID -->
+      <rect x="30" y="150" width="150" height="70" rx="8" fill="#eef2ff" stroke="#1b4d8c" stroke-width="1.5"/>
+      <text x="105" y="178" text-anchor="middle" font-weight="700" fill="#1b4d8c">Microsoft Entra ID</text>
+      <text x="105" y="196" text-anchor="middle" fill="#475569">SSO (OIDC/MSAL)</text>
+      <text x="105" y="211" text-anchor="middle" fill="#64748b" font-size="10">MFA, Conditional Access</text>
+
+      <!-- WAF -->
+      <rect x="250" y="40" width="140" height="70" rx="8" fill="#fff7ed" stroke="#ff9900" stroke-width="1.5"/>
+      <text x="320" y="68" text-anchor="middle" font-weight="700" fill="#b45309">AWS WAF</text>
+      <text x="320" y="86" text-anchor="middle" fill="#475569">Managed rules</text>
+      <text x="320" y="101" text-anchor="middle" fill="#64748b" font-size="10">OWASP / IP allowlist</text>
+
+      <!-- CLOUDFRONT -->
+      <rect x="250" y="150" width="140" height="70" rx="8" fill="#fff7ed" stroke="#ff9900" stroke-width="1.5"/>
+      <text x="320" y="178" text-anchor="middle" font-weight="700" fill="#b45309">CloudFront</text>
+      <text x="320" y="196" text-anchor="middle" fill="#475569">CDN + TLS (ACM)</text>
+      <text x="320" y="211" text-anchor="middle" fill="#64748b" font-size="10">HTTPS only, SPA fallback</text>
+
+      <!-- S3 WEB -->
+      <rect x="250" y="270" width="140" height="66" rx="8" fill="#f1f5f9" stroke="#64748b" stroke-width="1.5"/>
+      <text x="320" y="296" text-anchor="middle" font-weight="700" fill="#334155">S3 (Web)</text>
+      <text x="320" y="313" text-anchor="middle" fill="#475569" font-size="11">Static SPA bundle</text>
+      <text x="320" y="328" text-anchor="middle" fill="#64748b" font-size="10">Private, OAC, SSE</text>
+
+      <!-- API GW -->
+      <rect x="470" y="150" width="150" height="70" rx="8" fill="#fff7ed" stroke="#ff9900" stroke-width="1.5"/>
+      <text x="545" y="175" text-anchor="middle" font-weight="700" fill="#b45309">API Gateway</text>
+      <text x="545" y="192" text-anchor="middle" fill="#475569" font-size="11">REST (HTTPS)</text>
+      <text x="545" y="207" text-anchor="middle" fill="#64748b" font-size="10">JWT authorizer (Entra)</text>
+
+      <!-- LAMBDA -->
+      <rect x="680" y="150" width="150" height="70" rx="8" fill="#ecfdf5" stroke="#16a34a" stroke-width="1.5"/>
+      <text x="755" y="175" text-anchor="middle" font-weight="700" fill="#15803d">Lambda API</text>
+      <text x="755" y="192" text-anchor="middle" fill="#475569" font-size="11">Business logic + RBAC</text>
+      <text x="755" y="207" text-anchor="middle" fill="#64748b" font-size="10">Private subnets</text>
+
+      <!-- AURORA -->
+      <rect x="680" y="290" width="150" height="70" rx="8" fill="#ecfdf5" stroke="#16a34a" stroke-width="1.5"/>
+      <text x="755" y="316" text-anchor="middle" font-weight="700" fill="#15803d">Aurora/RDS</text>
+      <text x="755" y="333" text-anchor="middle" fill="#475569" font-size="11">PostgreSQL (metadata)</text>
+      <text x="755" y="348" text-anchor="middle" fill="#64748b" font-size="10">Encrypted, private, no public IP</text>
+
+      <!-- S3 ATTACH -->
+      <rect x="470" y="290" width="150" height="70" rx="8" fill="#f1f5f9" stroke="#64748b" stroke-width="1.5"/>
+      <text x="545" y="316" text-anchor="middle" font-weight="700" fill="#334155">S3 (Attachments)</text>
+      <text x="545" y="333" text-anchor="middle" fill="#475569" font-size="11">File objects</text>
+      <text x="545" y="348" text-anchor="middle" fill="#64748b" font-size="10">Private, SSE-KMS, pre-signed</text>
+
+      <!-- SECRETS / KMS / LOGS -->
+      <rect x="470" y="420" width="150" height="60" rx="8" fill="#f8fafc" stroke="#64748b" stroke-width="1.2"/>
+      <text x="545" y="444" text-anchor="middle" font-weight="700" fill="#334155">KMS + Secrets Mgr</text>
+      <text x="545" y="462" text-anchor="middle" fill="#64748b" font-size="10">Keys &amp; DB credentials</text>
+
+      <rect x="680" y="420" width="150" height="60" rx="8" fill="#f8fafc" stroke="#64748b" stroke-width="1.2"/>
+      <text x="755" y="444" text-anchor="middle" font-weight="700" fill="#334155">CloudWatch + CloudTrail</text>
+      <text x="755" y="462" text-anchor="middle" fill="#64748b" font-size="10">Logs, audit, monitoring</text>
+
+      <!-- Arrows -->
+      <!-- user -> entra (auth) -->
+      <line x1="105" y1="110" x2="105" y2="150" stroke="#475569" stroke-width="1.3" marker-end="url(#arrow)"/>
+      <text x="112" y="134" fill="#64748b" font-size="9">1. SSO</text>
+      <!-- user -> waf -->
+      <line x1="180" y1="75" x2="250" y2="75" stroke="#475569" stroke-width="1.3" marker-end="url(#arrow)"/>
+      <text x="188" y="68" fill="#64748b" font-size="9">2. HTTPS</text>
+      <!-- waf -> cloudfront -->
+      <line x1="320" y1="110" x2="320" y2="150" stroke="#475569" stroke-width="1.3" marker-end="url(#arrow)"/>
+      <!-- cloudfront -> s3 web -->
+      <line x1="320" y1="220" x2="320" y2="270" stroke="#475569" stroke-width="1.3" marker-end="url(#arrow)"/>
+      <text x="326" y="248" fill="#64748b" font-size="9">3. App load</text>
+      <!-- cloudfront -> api gw -->
+      <line x1="390" y1="185" x2="470" y2="185" stroke="#475569" stroke-width="1.3" marker-end="url(#arrow)"/>
+      <text x="396" y="178" fill="#64748b" font-size="9">4. API /w JWT</text>
+      <!-- api gw -> lambda -->
+      <line x1="620" y1="185" x2="680" y2="185" stroke="#475569" stroke-width="1.3" marker-end="url(#arrow)"/>
+      <!-- lambda -> aurora -->
+      <line x1="755" y1="220" x2="755" y2="290" stroke="#475569" stroke-width="1.3" marker-end="url(#arrow)"/>
+      <text x="761" y="258" fill="#64748b" font-size="9">5. Data</text>
+      <!-- lambda -> s3 attach (pre-signed) -->
+      <line x1="680" y1="205" x2="620" y2="300" stroke="#475569" stroke-width="1.3" marker-end="url(#arrow)"/>
+      <text x="612" y="250" fill="#64748b" font-size="9">6. Pre-signed URL</text>
+      <!-- user -> s3 attach direct upload (dashed) -->
+      <path d="M180,95 C420,120 460,250 470,315" fill="none" stroke="#94a3b8" stroke-width="1.2" stroke-dasharray="4 3" marker-end="url(#arrow)"/>
+      <text x="300" y="135" fill="#94a3b8" font-size="9">7. Direct file up/download (pre-signed, HTTPS)</text>
+
+      <!-- Boundary labels -->
+      <rect x="235" y="20" width="610" height="470" rx="10" fill="none" stroke="#ff9900" stroke-width="1" stroke-dasharray="3 3"/>
+      <text x="245" y="505" fill="#b45309" font-size="10" font-weight="700">AWS Account (per environment: UAT / Production - fully isolated)</text>
+      <rect x="460" y="130" width="385" height="250" rx="10" fill="none" stroke="#16a34a" stroke-width="1" stroke-dasharray="3 3"/>
+      <text x="470" y="128" fill="#15803d" font-size="10" font-weight="700">Private VPC (no inbound internet)</text>
+    </svg>
+  </div>
+
+  <h2>2. Request Flow (numbered on diagram)</h2>
+  <ol>
+    <li><strong>SSO:</strong> User authenticates to Microsoft Entra ID (MFA + Conditional Access enforced by the bank). The browser receives a signed OIDC token.</li>
+    <li><strong>HTTPS to edge:</strong> Browser requests the app; traffic passes AWS WAF then CloudFront (TLS 1.2+, HTTPS only).</li>
+    <li><strong>App load:</strong> CloudFront serves the static SPA from a private S3 bucket (via Origin Access Control; bucket not public).</li>
+    <li><strong>API calls:</strong> SPA calls the REST API over HTTPS, presenting the Entra ID token; API Gateway's JWT authorizer validates it before any logic runs.</li>
+    <li><strong>Data:</strong> Lambda (in private subnets) enforces role-based rules and reads/writes the encrypted PostgreSQL database (no public IP).</li>
+    <li><strong>Attachment broker:</strong> For files, Lambda issues a short-lived pre-signed S3 URL (scoped to one object, time-limited).</li>
+    <li><strong>File transfer:</strong> Browser uploads/downloads the file directly to the private attachments bucket over HTTPS using that pre-signed URL. File bytes never transit the database; the DB stores only metadata.</li>
+  </ol>
+
+  <h2>3. Data Classification &amp; Storage</h2>
+  <table>
+    <thead><tr><th>Data</th><th>Where stored</th><th>Protection</th></tr></thead>
+    <tbody>
+      <tr><td>Project records, stakeholders, timeline, risks, audit/approval trail</td><td>PostgreSQL (Aurora/RDS)</td><td>Encrypted at rest (KMS), TLS in transit, private subnet</td></tr>
+      <tr><td>Attachment files (documents)</td><td>S3 (attachments bucket)</td><td>Private, SSE-KMS, pre-signed time-limited access, versioning</td></tr>
+      <tr><td>Attachment metadata (name, size, owner, S3 key)</td><td>PostgreSQL</td><td>Same as DB above</td></tr>
+      <tr><td>Static app bundle (no data)</td><td>S3 (web bucket)</td><td>Private via CloudFront OAC, SSE</td></tr>
+      <tr><td>DB credentials / secrets</td><td>AWS Secrets Manager</td><td>KMS-encrypted, rotated, never in code</td></tr>
+    </tbody>
+  </table>
+
+  <h2>4. Security Controls (for InfoSec)</h2>
+  <table>
+    <thead><tr><th style="width:26%">Domain</th><th>Control</th></tr></thead>
+    <tbody>
+      <tr><td>Identity &amp; Access</td><td>Entra ID SSO (OIDC) with MFA + Conditional Access; API validates JWT on every request; application RBAC (Super Admin / Admin / PM / App Owner / Viewer) enforced server-side.</td></tr>
+      <tr><td>Network</td><td>Database and compute in private VPC subnets with no public IP; S3 buckets private (no public access); only CloudFront + API Gateway are internet-facing, fronted by WAF.</td></tr>
+      <tr><td>Encryption</td><td>TLS 1.2+ in transit everywhere; AES-256 at rest via KMS for S3, RDS/Aurora, and Secrets Manager.</td></tr>
+      <tr><td>Data segregation</td><td>UAT and Production are fully isolated: separate accounts/VPCs, buckets, databases, keys, and pipelines. No shared data.</td></tr>
+      <tr><td>Attachments</td><td>Stored in a dedicated private bucket; access only via short-lived pre-signed URLs scoped to a single object; file-type/size validation at the API; S3 versioning for recovery.</td></tr>
+      <tr><td>Least privilege</td><td>IAM roles scoped per service and per environment; CI/CD deploy role limited to its environment's bucket + CloudFront invalidation.</td></tr>
+      <tr><td>Logging &amp; audit</td><td>CloudTrail (API/account activity), CloudWatch (app/infra logs), CloudFront + S3 access logs; application maintains its own change/approval audit trail (maker-checker deletion workflow).</td></tr>
+      <tr><td>Secrets</td><td>No secrets in source or client bundle; DB credentials in Secrets Manager; the SPA holds no server secret (public SSO client with PKCE).</td></tr>
+      <tr><td>Resilience</td><td>S3 durability + versioning; automated DB backups / point-in-time recovery; infrastructure reproducible via IaC/pipelines.</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout sec">
+    <strong>Key assurance for InfoSec:</strong> The static front-end holds no secrets and cannot reach the database directly. All data access is brokered by an authenticated API that validates the corporate SSO token and enforces role permissions server-side. Attachment files are isolated in a private, encrypted bucket accessed only through time-limited, single-object pre-signed URLs.
+  </div>
+
+  <h2>5. Assumptions &amp; Items for InfoSec Confirmation</h2>
+  <ul>
+    <li>Internet exposure: confirm whether the app is internal-only (VPN/corporate network) or public with WAF/IP allowlisting.</li>
+    <li>Database engine standard: Aurora Serverless v2 / RDS PostgreSQL assumed (relational, audit-friendly). Confirm org preference.</li>
+    <li>Data residency / region: confirm the AWS region(s) permitted for bank data.</li>
+    <li>Retention: confirm retention and backup policies for DB and attachments; archival-project data is retained per the application's deletion workflow.</li>
+    <li>DLP / malware scanning: confirm if uploaded attachments must be scanned (e.g., antivirus) before storage.</li>
+    <li>Key management: confirm customer-managed KMS keys (CMK) vs AWS-managed.</li>
+  </ul>
+
+  <h2>6. Approval</h2>
+  <div class="approval-box">
+    <div>Prepared by (Application Team)<div class="line">Name / Date / Signature</div></div>
+    <div>Reviewed by (Information Security)<div class="line">Name / Date / Signature</div></div>
+    <div>Approved by (Cloud / Platform)<div class="line">Name / Date / Signature</div></div>
+  </div>
+
+  <footer>
+    <span>HawkPM &mdash; Solution Architecture for InfoSec Review &middot; Confidential &middot; Internal use only.</span>
+    <span>Equitas Small Finance Bank</span>
+  </footer>
+
+  <script>
+    document.getElementById('gen-date').textContent =
+      'Issued: ' + new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+  </script>
+</body>
+</html>

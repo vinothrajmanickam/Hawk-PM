@@ -1,0 +1,44 @@
+# AWS CodeBuild build spec for HawkPM (static Vite/React SPA).
+#
+# This single spec supports BOTH environments. Set these CodeBuild environment
+# variables per pipeline (one pipeline for UAT, one for Production):
+#   APP_ENV          -> "uat" or "production"
+#   DEPLOY_BUCKET    -> target S3 bucket for that environment
+#   CF_DISTRIBUTION  -> CloudFront distribution ID for that environment
+#
+# The build runs the matching environment build, syncs dist/ to S3, and
+# invalidates the CloudFront cache so new assets go live immediately.
+
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      nodejs: 20
+    commands:
+      - echo "Building HawkPM for environment: $APP_ENV"
+      - npm ci
+
+  build:
+    commands:
+      - |
+        if [ "$APP_ENV" = "production" ]; then
+          npm run build:prod
+        else
+          npm run build:uat
+        fi
+
+  post_build:
+    commands:
+      # Deploy static assets to the environment S3 bucket.
+      # Long-cache the hashed assets, no-cache the HTML entry so clients always
+      # pick up the latest index.html.
+      - aws s3 sync dist/ "s3://$DEPLOY_BUCKET" --delete --cache-control "public,max-age=31536000,immutable" --exclude "index.html"
+      - aws s3 cp dist/index.html "s3://$DEPLOY_BUCKET/index.html" --cache-control "no-cache,no-store,must-revalidate"
+      # Invalidate CloudFront so the new version is served right away.
+      - aws cloudfront create-invalidation --distribution-id "$CF_DISTRIBUTION" --paths "/*"
+
+artifacts:
+  base-directory: dist
+  files:
+    - '**/*'
